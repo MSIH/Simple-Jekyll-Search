@@ -215,11 +215,34 @@ function findMatches (data, crit, strategy, opt) {
 }
 
 function findMatchesInObject (obj, crit, strategy, opt) {
+ var tags = crit.match(/\[.*?\]/g); //find strings within []
+ var categories = crit.match(/\(.*?\)/g); //find strings within ()
+ //var content = tags.foreach(crit.replace(tag,""))
+ 
+ // if tags, match, no match return
+ // if category, match, no mtach return
+ // if content, match, no match return
+ // if all are true return object
+ var match = false;
   for (var key in obj) {
-    if (!isExcluded(obj[key], opt.exclude) && strategy.matches(obj[key], crit)) {
-      return obj
+   if(tags && key === "tags"){
+    if (!isExcluded(obj[key], opt.exclude) && !strategy.matches(obj[key], tags)) { //if no tags match return
+      return 
+    }
+   }
+   else if (categories && key === "category"){
+    if (categories && !isExcluded(obj[key], opt.exclude) && !strategy.matches(obj[key], categories)) { //if no categories match return
+      return 
+    }
+   }
+   else if (contents){
+   
+   if (!isExcluded(obj[key], opt.exclude) && !strategy.matches(obj[key], crit)) {
+      return 
     }
   }
+  }
+  return obj
 }
 
 function isExcluded (term, excludedTerms) {
